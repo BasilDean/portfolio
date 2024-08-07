@@ -20,8 +20,13 @@ return new class extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->timestamps();
 
-            $table->index(['tokenable_type', 'tokenable_id']);
+            // Drop the index if it exists
+            $table->dropIndex(['tokenable_type', 'tokenable_id']);
+
+            // Add the new index
+            $table->index(['tokenable_type', 'tokenable_id'], 'personal_access_tokens_tokenable_type_tokenable_id_index');
         });
+
     }
 
     /**
