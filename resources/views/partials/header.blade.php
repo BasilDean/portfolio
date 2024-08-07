@@ -11,6 +11,7 @@
     <meta name="copyright" content="https://dandelions.website/">
     <title>Personal portfolio</title>
     @vite('resources/css/app.css')
+    @vite('resources/css/styles.css')
 </head>
 
 <body>
@@ -18,7 +19,8 @@
 <header class="siteHeader">
     <div class="siteHeader__wrapper">
         <a class="siteHeader__logo" href="/build">
-            <svg></svg><span>DANDELION</span>
+            <svg></svg>
+            <span>DANDELION</span>
         </a>
         <div class="siteHeader__navigation" id="mobileMenu">
             <nav>
@@ -33,6 +35,22 @@
                     </li>
                     <li><a href="#">CONTACT ME</a>
                     </li>
+
+                    @auth
+                        <li>
+                            <a href="{{ route('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit">Logout</button>
+                            </form>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ route('login') }}">Login</a>
+                        </li>
+                    @endauth
                 </ul>
             </nav>
         </div>
