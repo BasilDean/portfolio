@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
@@ -9,7 +9,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="author" content="https://dandelions.website/">
     <meta name="copyright" content="https://dandelions.website/">
-    <title>Personal portfolio</title>
+    <title>{{ __('messages.welcome') }}</title>
     @vite('resources/css/app.css')
     @vite('resources/css/styles.css')
 </head>
@@ -24,33 +24,27 @@
         </a>
         <div class="siteHeader__navigation" id="mobileMenu">
             <nav>
+                @php
+                    $mainPublicMenus = \App\Models\Menu::where('type', 'public')->where('group', 'main-menu')->get();
+                @endphp
                 <ul>
-                    <li><a href="/build">HOME</a>
-                    </li>
-                    <li><a href="#">ABOUT</a>
-                    </li>
-                    <li><a href="#">PROJECTS</a>
-                    </li>
-                    <li><a href="#">BLOG</a>
-                    </li>
-                    <li><a href="#">CONTACT ME</a>
-                    </li>
+                    @foreach ($mainPublicMenus as $menu)
+
+                        <li><a href="{{ $menu->url }}">{{ $menu->translated_name }}</a></li>
+                    @endforeach
 
                     @auth
-                        <li>
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
-                        </li>
                         <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit">Logout</button>
                             </form>
                         </li>
-                    @else
-                        <li>
-                            <a href="{{ route('login') }}">Login</a>
-                        </li>
                     @endauth
+                    <ul>
+                        <li><a href="{{ route('lang.switch', 'en') }}">En</a></li>
+                        <li><a href="{{ route('lang.switch', 'ru') }}">Ру</a></li>
+                    </ul>
                 </ul>
             </nav>
         </div>

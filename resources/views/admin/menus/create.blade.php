@@ -1,28 +1,46 @@
-{{--@extends('layouts.admin')--}}
+@extends('admin.layouts.admin_layout')
 
-{{--@section('content')--}}
-    <h1>Create Menu</h1>
-    <form action="{{ route('menus.store') }}" method="POST">
-        @csrf
-        <div>
-            <label for="name">Name</label>
-            <input type="text" name="name" id="name" required>
-        </div>
-        <div>
-            <label for="url">URL</label>
-            <input type="text" name="url" id="url" required>
-        </div>
-        <div>
-            <label for="type">Type</label>
-            <select name="type" id="type" required>
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-            </select>
-        </div>
-        <div>
-            <label for="group">Group</label>
-            <input type="text" name="group" id="group" required>
-        </div>
-        <button type="submit">Create</button>
-    </form>
-{{--@endsection--}}
+@section('content')
+
+    <div class="card card-primary card-outline mb-4 mt-5 col-12 col-md-8 mx-auto"> <!--begin::Header-->
+        <div class="card-header">
+            <h1>{{ __('menus.create_title') }}</h1>
+        </div> <!--end::Header--> <!--begin::Form-->
+
+        <form action="{{ route('menus.store') }}" method="POST">
+
+            <div class="card-body">
+                @csrf
+                @method('PUT')
+                <div class="mb-3">
+                    <label for="name_en" class="form-label">Name (English)</label>
+                    <input class="form-control" type="text" name="name_en" id="name_en" value="" required>
+                </div>
+                <div class="mb-3">
+                    <label for="name_ru" class="form-label">Name (Russian)</label>
+                    <input class="form-control" type="text" name="name_ru" id="name_ru" value="" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="url">{{ __('menus.url') }}</label>
+                    <input class="form-control" type="text" name="url" id="url" value="" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="type">{{ __('menus.type') }}</label>
+                    <select class="form-control" name="type" id="type" required>
+                        <option value="public" selected>Public</option>
+                        <option value="private">Private</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="group">{{ __('menus.group') }}</label>
+                    <input class="form-control" type="text" name="group" id="group" value="" required>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary" type="submit">{{ __('menus.save') }}</button>
+            </div>
+        </form>
+
+    </div>
+@endsection
