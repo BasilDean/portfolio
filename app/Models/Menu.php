@@ -15,6 +15,7 @@ class Menu extends Model
         'group',
     ];
 
+
     public function translations()
     {
         return $this->hasMany(MenuTranslation::class);
