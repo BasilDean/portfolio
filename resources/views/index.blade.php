@@ -1,1 +1,1 @@
-@extends('layouts.main-public-layout')
+@extends('layouts.portfolio.layout')

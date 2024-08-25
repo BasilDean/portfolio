@@ -16,7 +16,7 @@ class Menu extends Model
     ];
 
 
-    public function translations()
+    public function translations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(MenuTranslation::class);
     }

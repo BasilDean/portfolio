@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logs', function (Blueprint $table) {
+        Schema::create('gym_tracker_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('exercise_id')->constrained()->onDelete('cascade');
+            $table->foreignId('gym_tracker_exercise_id')->constrained()->onDelete('cascade');
             $table->integer('weight');  // Вес для конкретного подхода
             $table->integer('reps');    // Повторения для конкретного подхода
             $table->timestamps();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('gym_tracker_logs');
     }
 };

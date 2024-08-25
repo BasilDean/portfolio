@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bodyparts', function (Blueprint $table) {
+        Schema::create('gym_tracker_body_parts', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('icon')->nullable(); // Путь к иконке
             $table->timestamps();
         });
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bodyparts');
+        Schema::dropIfExists('gym_tracker_body_parts');
     }
 };

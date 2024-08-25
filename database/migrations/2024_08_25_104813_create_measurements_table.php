@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('measurements', function (Blueprint $table) {
+        Schema::create('gym_tracker_measurements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->foreignId('bodypart_id')->constrained()->onDelete('cascade');
+            $table->foreignId('gym_tracker_body_part_id')->constrained()->onDelete('cascade');
             $table->float('current_size'); // Текущий размер части тела
             $table->float('goal_size')->nullable(); // Целевое значение для этой части
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('measurements');
+        Schema::dropIfExists('gym_tracker_measurements');
     }
 };

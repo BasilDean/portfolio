@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         // Связующая таблица для упражнений и оборудования
-        Schema::create('exercise_equipment', function (Blueprint $table) {
+        Schema::create('gym_tracker_exercise_equipment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exercise_id')->references('id')->on('exercises')->constrained()->onDelete('cascade');
-            $table->foreignId('equipment_id')->references('id')->on('equipments')->constrained()->onDelete('cascade');
+            $table->foreignId('exercise_id')->references('id')->on('gym_tracker_exercises')->constrained()->onDelete('cascade');
+            $table->foreignId('equipment_id')->references('id')->on('gym_tracker_equipments')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exercise_equipment');
+        Schema::dropIfExists('gym_tracker_exercise_equipment');
     }
 };

@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             MenusTableSeeder::class,
             MenuTranslationsTableSeeder::class,
+            BodypartsSeeder::class,
+            BodypartTranslationsSeeder::class,
+            RolesAndPermissionsSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

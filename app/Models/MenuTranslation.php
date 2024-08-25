@@ -12,7 +12,7 @@ class MenuTranslation extends Model
         'name',
     ];
 
-    public function menu()
+    public function menu(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Menu::class);
     }
