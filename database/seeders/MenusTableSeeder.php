@@ -16,6 +16,8 @@ class MenusTableSeeder extends Seeder
             ['url' => '/', 'type' => 'public', 'group' => 'main'],
             ['url' => '/dashboard', 'type' => 'private', 'group' => 'main'],
             ['url' => '/contact', 'type' => 'public', 'group' => 'footer'],
+            ['url' => '/gymtracker', 'type' => 'public', 'group' => 'gymtracker'],
+            ['url' => '/gymtracker/bodyparts', 'type' => 'public', 'group' => 'gymtracker'],
         ];
 
         foreach ($menus as $menu) {

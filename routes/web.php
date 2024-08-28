@@ -21,9 +21,15 @@ use App\Http\Controllers\LanguageController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/gymtracker/bodyparts/', [BodyPartController::class, 'index'])->name('gymtracker.bodyparts.index');
-Route::get('/gymtracker/bodyparts/{id}', [BodyPartController::class, 'edit'])->name('gymtracker.bodyparts.edit');
-Route::delete('/gymtracker/bodyparts/{id}', [BodyPartController::class, 'destroy'])->name('gymtracker.bodyparts.destroy');
+Route::prefix('gymtracker')->group(function () {
+    Route::prefix('bodyparts')->group(function () {
+        Route::get('/', [BodyPartController::class, 'index'])->name('gymtracker.bodyparts.index');
+        Route::get('/{id}', [BodyPartController::class, 'edit'])->name('gymtracker.bodyparts.edit');
+        Route::post('/', [BodyPartController::class, 'store'])->name('gymtracker.bodyparts.store');
+        Route::put('/{id}', [BodyPartController::class, 'update'])->name('gymtracker.bodyparts.update');
+        Route::delete('/{id}', [BodyPartController::class, 'destroy'])->name('gymtracker.bodyparts.destroy');
+    });
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

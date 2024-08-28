@@ -34,4 +34,9 @@ class BodyPart extends Model
 
         return $translation ? $translation->title : null;
     }
+
+//    public function setTranslation($locales, $title)
+//    {
+//
+//    }
 }

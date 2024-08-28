@@ -44,6 +44,13 @@ return [
             'throw' => false,
         ],
 
+        'body_parts' => [
+            'driver' => 'local',
+            'root' => public_path('images/bodyParts'),
+            'url' => env('APP_URL').'/images/bodyParts',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

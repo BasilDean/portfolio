@@ -4,7 +4,10 @@ namespace App\Http\Controllers\gymTracker;
 
 use App\Http\Controllers\Controller;
 use App\Models\gymTracker\BodyPart;
+use App\Models\gymTracker\BodypartTranslation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BodyPartController extends Controller
 {
@@ -13,7 +16,7 @@ class BodyPartController extends Controller
      */
     public function index()
     {
-        $bodyParts = BodyPart::with('translations')->paginate(2);
+        $bodyParts = BodyPart::with('translations')->paginate(15);
         return view('layouts.gymTracker.sections.bodyParts.index', compact('bodyParts'));
     }
 
@@ -31,27 +34,34 @@ class BodyPartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'locale_en' => 'required|string|max:255',
+            'locale_ru' => 'required|string|max:255',
+            'icon' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $bodyPart = new BodyPart($request->all());
+        $data = $request->all();
 
         if ($request->hasFile('icon')) {
-            $bodyPart->icon = $request->file('icon')->store('icons/body_parts', 'public');
+            $filename = Str::slug($data['locale_en']) . '_' . time() . '.' . $request->icon->extension();
+            $path = $request->icon->storeAs('', $filename, 'body_parts'); // Save the icon
+            $data['icon'] = 'images/bodyParts/' . $filename; // Store the relative path in the database
         }
 
-        $bodyPart->save();
+        $bodypart = BodyPart::create($data);
 
-        return redirect()->route('body_parts.index');
-    }
+        BodypartTranslation::create([
+            'body_part_id' => $bodypart->id,
+            'locale' => 'en',
+            'title' => $data['locale_en'],
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        BodypartTranslation::create([
+            'body_part_id' => $bodypart->id,
+            'locale' => 'ru',
+            'title' => $data['locale_ru'],
+        ]);
+
+        return response()->json(['success' => 'Body part created successfully']);
     }
 
     /**
@@ -59,7 +69,8 @@ class BodyPartController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $item = BodyPart::findOrFail($id);
+        return response()->json($item);
     }
 
     /**
@@ -67,15 +78,37 @@ class BodyPartController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $bodyPart = BodyPart::findOrFail($id);
+        $data = $request->all();
+
+        if ($request->hasFile('icon')) {
+            // Delete the old icon if it exists
+            if ($bodyPart->icon) {
+                Storage::disk('public')->delete($bodyPart->icon);
+            }
+
+            $data['icon'] = $request->file('icon')->store('icons', 'public'); // Save the new icon
+        }
+
+        $bodyPart->update($data);
+
+        return response()->json(['success' => 'Body part updated successfully']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BodyPart $bodyPart)
+    public function destroy(string $id)
     {
+        $bodyPart = BodyPart::findOrFail($id);
+        if ($bodyPart->icon) {
+            $filePath = str_replace('images/bodyParts/', '', $bodyPart->icon);
+            if (Storage::disk('body_parts')->exists($filePath)) {
+                Storage::disk('body_parts')->delete($filePath);
+            }
+        }
         $bodyPart->delete();
-        return redirect()->route('gymtracker.bodyparts.index')->with('success', 'Body part deleted successfully.');
+        return response()->json(['success' => 'Body part deleted successfully']);
     }
 }

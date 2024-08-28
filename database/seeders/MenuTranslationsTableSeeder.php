@@ -19,6 +19,10 @@ class MenuTranslationsTableSeeder extends Seeder
             ['menu_id' => 2, 'locale' => 'ru', 'name' => 'Панель управления'],
             ['menu_id' => 3, 'locale' => 'en', 'name' => 'Contact'],
             ['menu_id' => 3, 'locale' => 'ru', 'name' => 'Контакты'],
+            ['menu_id' => 4, 'locale' => 'en', 'name' => 'Gym tracker'],
+            ['menu_id' => 4, 'locale' => 'ru', 'name' => 'Gym tracker'],
+            ['menu_id' => 5, 'locale' => 'en', 'name' => 'Parameters'],
+            ['menu_id' => 5, 'locale' => 'ru', 'name' => 'Параметры'],
         ];
 
         foreach ($menuTranslations as $menuTranslation) {
