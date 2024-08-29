@@ -55,7 +55,7 @@
                                                     <img src="{{ asset($bodyPart->icon) }}" alt="">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-warning editItem" data-element-id="{{$bodyPart->id}}"
+                                                    <a class="btn btn-warning editItem" data-route-update="{{route('gymtracker.bodyparts.update', $bodyPart)}}"
                                                        href="{{ route('gymtracker.bodyparts.edit', $bodyPart) }}">{{ __('gymTracker.bodyParts.edit_btn') }}</a>
                                                 </td>
                                                 <td>
@@ -63,7 +63,7 @@
                                                         action="{{ route('gymtracker.bodyparts.destroy', $bodyPart) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
-                                                        @method('DELETE')
+                                                        <input type="hidden" class="formMethod" name="_method" value="DELETE">
                                                         <button class="btn btn-danger"
                                                                 type="submit">{{ __('gymTracker.bodyParts.delete_btn') }}</button>
                                                     </form>
@@ -109,6 +109,8 @@
                 <div class="modal-body">
                     <form enctype="multipart/form-data" id="editor">
                         @csrf
+                        <input type="hidden" name="_method" id="formMethod" value="POST">
+                        <input type="hidden" class="" id="id" name="id">
                         <div class="form-group">
                             <label for="locale_ru">title (ru)</label>
                             <input type="text" class="form-control form-control-border border-width-2"
@@ -120,7 +122,9 @@
                                    id="locale_en" name="locale_en" placeholder="title (en)">
                         </div>
                         <div class="form-group">
-                            <label for="icon">Icon</label>
+                            <label for="icon">
+                                <img id="image_preview" src="{{ asset(__('gymTracker.general.default_picture')) }}" alt="">
+                            </label>
                             <div class="custom-file">
                                 <input type="file" name="icon" id="icon">
                             </div>
@@ -138,8 +142,13 @@
 
     <script>
         const translations = {
-            modalTitle: "{{ __('gymTracker.bodyParts.create_btn') }}",
+            modalTitleCreate: "{{ __('gymTracker.bodyParts.create_btn') }}",
+            modalTitleUpdate: "{{ __('gymTracker.bodyParts.update_title') }}",
             createRoute: "{{ route('gymtracker.bodyparts.store') }}",
+            edit_btn: "{{ __('gymTracker.bodyParts.edit_btn') }}",
+            create_btn: "{{ __('gymTracker.bodyParts.create_btn') }}",
+            save_btn: "{{ __('gymTracker.bodyParts.save_btn') }}",
+            default_picture: "{{ __('gymTracker.general.default_picture') }}",
         };
         document.addEventListener('DOMContentLoaded', function () {
             // Set up CSRF token for all AJAX requests
@@ -148,23 +157,52 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            const showModalCreate = () => {
+            const showModalCreate = (updateRoute = false) => {
                 const modal = $('#paramModal');
                 const form = modal.find('form');
-                console.log(form)
-                form.trigger('reset'); // Reset the form fields
-                form.attr('action', translations.createRoute); // Set the form action to the create route
-                form.attr('method', 'POST'); // Ensure the method is POST for creating new items
+                const button = form.find('button[type="submit"]');
+                console.log(updateRoute)
+                if (updateRoute) {
+                    form.attr('action', updateRoute); // Set the form action to the create route
+                    $('#formMethod').val('PUT');
+                    button.text(translations.save_btn)
+                } else {
+                    form.trigger('reset'); // Reset the form fields
+                    form.attr('action', translations.createRoute); // Set the form action to the create route
+                    $('#formMethod').val('POST');
+                    $('#id').val('');
+                    $("#image_preview").attr('src', translations.default_picture);
+                    let iconElement = $('#icon');
+                    console.log(iconElement);
+                    iconElement.val();
+                    button.text(translations.create_btn);
+                    $(modal).find('.modal-title').text(translations.modalTitleUpdate);
+                }
                 const paramModal = new bootstrap.Modal(modal[0])
                 paramModal.show();
-                $(modal).find('.modal-title').text(translations.modalTitle)
                 return false;
             };
+
+            $('#icon').on('change', function () {
+                const fileInput = event.target;
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader(); // Create a new FileReader instance
+
+                    reader.onload = function(e) {
+                        const imagePreview = $('#image_preview')[0];
+                        imagePreview.src = e.target.result; // Set the img src to the result of the FileReader
+                    };
+
+                    reader.readAsDataURL(file); // Read the file as a Data URL
+                }
+            });
 
             const addEditElement = (formData, actionUrl, method) => {
                 $.ajax({
                     url: actionUrl,
-                    method: method,
+                    method: 'POST',
                     data: formData,
                     contentType: false, // Important
                     processData: false, // Important
@@ -196,24 +234,61 @@
                 });
             }
 
-            $('#createNewParameter').on('click', showModalCreate);
+            $('#createNewParameter').on('click', () => {
+                showModalCreate(false);
+            });
 
             $('#editor').on('submit', function (e) {
                 e.preventDefault();
-                addEditElement(new FormData(this), $(this).attr('action'), $(this).attr('method'));
+                addEditElement(new FormData(this), $(this).attr('action'), $(this).find('#formMethod').val());
             });
 
             $('.editItem').on('click', function (e) {
                 e.preventDefault();
-                const elementId = $(this).data('elementId');
-                console.log(elementId);
+                const updateRoute = $(this).data('routeUpdate');
+                const editRoute = $(this).attr('href');
+                const transformArray = (arr) => {
+                    return arr.reduce((acc, item) => {
+                        const key = `locale_${item.locale}`;
+                        acc[key] = item.title;
+                        return acc;
+                    }, {});
+                };
+                $.ajax({
+                    url: editRoute, // Adjust URL based on your routes
+                    method: 'GET',
+                    success: function(data) {
+                        console.log(data);
+                        let locales = data.translations;
+                        locales = transformArray(locales)
+                        $('#locale_ru').val(locales.locale_ru);
+                        $('#locale_en').val(locales.locale_en);
+                        $('#id').val(data.id);
+                        $('#image_preview').attr('src', '/' + data.icon)
+                        $('#icon').val('data.icon');
+                    },
+                    error: function() {
+                        alert('Failed to fetch item data.');
+                    }
+                });
+                showModalCreate(updateRoute);
             });
 
             $('.deleteItem').on('submit', function (e) {
                 e.preventDefault();
-                deleteElement(new FormData(this), $(this).attr('action'), $(this).attr('method'));
+                console.log('test')
+                deleteElement(new FormData(this), $(this).attr('action'), $(this).find('.formMethod').val());
             });
 
         });
     </script>
+
+    <style>
+        #image_preview {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            object-position: center;
+        }
+    </style>
 @endsection

@@ -69,15 +69,20 @@ class BodyPartController extends Controller
      */
     public function edit(string $id)
     {
-        $item = BodyPart::findOrFail($id);
+        $item = BodyPart::with('translations')->findOrFail($id);
         return response()->json($item);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): \Illuminate\Http\JsonResponse
     {
+        $request->validate([
+            'locale_en' => 'required|string|max:255',
+            'locale_ru' => 'required|string|max:255',
+            'icon' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
         $bodyPart = BodyPart::findOrFail($id);
         $data = $request->all();
@@ -92,6 +97,15 @@ class BodyPartController extends Controller
         }
 
         $bodyPart->update($data);
+        $bodyPart->translations()->updateOrCreate(
+            ['locale' => 'en'],
+            ['title' => $request->locale_en]
+        );
+
+        $bodyPart->translations()->updateOrCreate(
+            ['locale' => 'ru'],
+            ['title' => $request->locale_ru]
+        );
 
         return response()->json(['success' => 'Body part updated successfully']);
     }
