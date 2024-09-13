@@ -16,6 +16,15 @@ class BodypartsSeeder extends Seeder
             ['icon' => 'images/bodyParts/height.png'],
             ['icon' => 'images/bodyParts/weight.png'],
             ['icon' => 'images/bodyParts/bodyfat.png'],
+            ['icon' => 'images/bodyParts/waist.png'],
+            ['icon' => 'images/bodyParts/chest.png'],
+            ['icon' => 'images/bodyParts/biceps.png'],
+            ['icon' => 'images/bodyParts/forearm.png'],
+            ['icon' => 'images/bodyParts/shoulders.png'],
+            ['icon' => 'images/bodyParts/hips.png'],
+            ['icon' => 'images/bodyParts/leg.png'],
+            ['icon' => 'images/bodyParts/calves.png'],
+            ['icon' => 'images/bodyParts/neck.png'],
         ];
 
 

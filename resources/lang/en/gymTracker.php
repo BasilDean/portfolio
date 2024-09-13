@@ -15,5 +15,10 @@ return [
     'general' => [
         'title' => 'Gym Tracker',
         'default_picture' => '/images/no-image.png',
+        'id' => 'ID',
+        'name' => 'Title',
+        'icon' => 'Icon',
+        'title_ru' => 'Title (RU)',
+        'title_en' => 'Title (EN)',
     ]
 ];

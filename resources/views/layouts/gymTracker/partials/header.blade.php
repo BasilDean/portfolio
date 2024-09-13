@@ -83,6 +83,8 @@
                     <i class="fas fa-th-large"></i>
                 </a>
             </li>
+            <li><a href="{{ route('lang.switch', 'en') }}">En</a></li>
+            <li><a href="{{ route('lang.switch', 'ru') }}">Ру</a></li>
         </ul>
     </nav>
     <!-- /.navbar -->
