@@ -26,9 +26,6 @@ class BodypartsSeeder extends Seeder
             ['icon' => 'images/bodyParts/calves.png'],
             ['icon' => 'images/bodyParts/neck.png'],
         ];
-
-
-
         foreach ($bodyparts as $bodypart) {
             BodyPart::create($bodypart);
         }

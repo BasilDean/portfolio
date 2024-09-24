@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             MenuTranslationsTableSeeder::class,
             BodypartsSeeder::class,
             BodypartTranslationsSeeder::class,
-            RolesAndPermissionsSeeder::class,
+            EquipmentsTableSeeder::class,
+            EquipmentTranslationsTableSeeder::class,
+            UserTableSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

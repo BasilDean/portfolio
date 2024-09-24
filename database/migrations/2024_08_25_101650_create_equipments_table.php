@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('gym_tracker_equipments', function (Blueprint $table) {
             $table->id();
+            $table->string('icon')->nullable(); // Путь к иконке
             $table->timestamps();
         });
     }

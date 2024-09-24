@@ -47,20 +47,20 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($bodyParts as $bodyPart)
+                                        @foreach($equipments as $item)
                                             <tr>
-                                                <td class="dtr-control sorting_1" tabindex="0">{{$bodyPart->id}}</td>
-                                                <td>{{$bodyPart->translated_title}}</td>
+                                                <td class="dtr-control sorting_1" tabindex="0">{{$item->id}}</td>
+                                                <td>{{$item->translated_title}}</td>
                                                 <td>
-                                                    <img src="{{ asset($bodyPart->icon) }}" alt="">
+                                                    <img src="{{ asset($item->icon) }}" alt="">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-warning editItem" data-route-update="{{route('gymtracker.bodyparts.update', $bodyPart)}}"
-                                                       href="{{ route('gymtracker.bodyparts.edit', $bodyPart) }}">{{ __('gymTracker.bodyParts.edit_btn') }}</a>
+                                                    <a class="btn btn-warning editItem" data-route-update="{{route('gymtracker.equipment.update', $item)}}"
+                                                       href="{{ route('gymtracker.equipment.edit', $item) }}">{{ __('gymTracker.bodyParts.edit_btn') }}</a>
                                                 </td>
                                                 <td>
                                                     <form class="deleteItem"
-                                                        action="{{ route('gymtracker.bodyparts.destroy', $bodyPart) }}"
+                                                        action="{{ route('gymtracker.equipment.destroy', $item) }}"
                                                         method="POST" style="display:inline;">
                                                         @csrf
                                                         <input type="hidden" class="formMethod" name="_method" value="DELETE">
@@ -85,7 +85,7 @@
                             </div>
 
                             <!-- Pagination links -->
-                            {{ $bodyParts->links('vendor.pagination.lte') }}
+                            {{ $equipments->links('vendor.pagination.lte') }}
                         </div>
                     </div>
                     <!-- /.card-body -->
@@ -144,7 +144,7 @@
         const translations = {
             modalTitleCreate: "{{ __('gymTracker.bodyParts.create_btn') }}",
             modalTitleUpdate: "{{ __('gymTracker.bodyParts.update_title') }}",
-            createRoute: "{{ route('gymtracker.bodyparts.store') }}",
+            createRoute: "{{ route('gymtracker.equipment.store') }}",
             edit_btn: "{{ __('gymTracker.bodyParts.edit_btn') }}",
             create_btn: "{{ __('gymTracker.bodyParts.create_btn') }}",
             save_btn: "{{ __('gymTracker.bodyParts.save_btn') }}",
